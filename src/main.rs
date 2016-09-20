@@ -12,7 +12,13 @@ struct Data {
 fn main() {
     let stdin = io::stdin();
     for line in stdin.lock().lines() {
-        let decoded: Data = json::decode(&line.unwrap()).unwrap();
-        println!("{},{}", decoded.name, decoded.age);
+        let decoded: Option<Data> = match json::decode(&line.unwrap()) {
+            Result::Ok(val) => Some(val),
+            Result::Err(_) => None
+        };
+        match decoded {
+            None => print!(""),
+            Some(val) => println!("{},{}", val.name, val.age)
+        };
     }
 }
